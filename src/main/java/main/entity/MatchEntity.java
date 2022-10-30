@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-public class GameEntity extends PanacheEntityBase {
+public class MatchEntity extends PanacheEntityBase {
 
     @Id
     @GeneratedValue
@@ -38,7 +38,7 @@ public class GameEntity extends PanacheEntityBase {
         return secondTeam;
     }
 
-    public GameEntity(UUID uuid, TeamEntity firstTeam, TeamEntity secondTeam, Date matchDate, String groupName, String result) {
+    public MatchEntity(UUID uuid, TeamEntity firstTeam, TeamEntity secondTeam, Date matchDate, String groupName, String result) {
         this.uuid = uuid;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
@@ -84,7 +84,7 @@ public class GameEntity extends PanacheEntityBase {
         this.result = result;
     }
 
-    public GameEntity() {
+    public MatchEntity() {
     }
 
 
@@ -97,7 +97,7 @@ public class GameEntity extends PanacheEntityBase {
     }
 
     @Transactional
-    public static void persistGame(GameEntity gameEntity) {
-        persist(gameEntity);
+    public static void persistMatch(MatchEntity matchEntity) {
+        persist(matchEntity);
     }
 }

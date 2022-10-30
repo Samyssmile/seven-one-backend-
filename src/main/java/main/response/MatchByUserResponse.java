@@ -5,7 +5,7 @@ import main.entity.TeamEntity;
 
 import java.util.Date;
 
-public class GameByUserResponse {
+public class MatchByUserResponse {
 
     private TeamEntity firstTeam;
     private TeamEntity secondTeam;
@@ -14,10 +14,10 @@ public class GameByUserResponse {
     private String result;
     private PredictionDto predictionDto;
 
-    public GameByUserResponse() {
+    public MatchByUserResponse() {
     }
 
-    public GameByUserResponse(TeamEntity firstTeam, TeamEntity secondTeam, Date matchDate, String group, String result, PredictionDto predictionDto) {
+    public MatchByUserResponse(TeamEntity firstTeam, TeamEntity secondTeam, Date matchDate, String group, String result, PredictionDto predictionDto) {
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
         this.matchDate = matchDate;

@@ -42,7 +42,7 @@ public class PredictionResource {
     @Path("/")
     @Consumes("application/json")
     @Produces("application/json")
-    @Operation(summary = "Make new prediction to an upcaming game.")
+    @Operation(summary = "Make new prediction to an upcaming match.")
     @RolesAllowed({"app-user", "app-admin"})
     public Response makePrediction(PredictionDto predictionDto) {
         try {
@@ -50,7 +50,7 @@ public class PredictionResource {
             if (optionalEntity.isPresent()) {
                 return Response.ok(optionalEntity.get()).build();
             } else {
-                logger.warn("Bad request for prediction: "+predictionDto.getPrediction()+"; Game "+predictionDto.getGameUuid());
+                logger.warn("Bad request for prediction: "+predictionDto.getPrediction()+"; Game "+predictionDto.getMatchUuid());
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
         }catch (UnauthorizedException unauthorizedException){

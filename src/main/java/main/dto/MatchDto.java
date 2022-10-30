@@ -3,8 +3,7 @@ package main.dto;
 import java.util.Date;
 import java.util.UUID;
 
-public class GameDto {
-
+public class MatchDto {
     private UUID uuid;
     private TeamDto firstTeam;
     private TeamDto secondTeam;
@@ -12,10 +11,10 @@ public class GameDto {
     private String groupName;
     private String result;
 
-    public GameDto() {
+    public MatchDto() {
     }
 
-    public GameDto(UUID uuid, TeamDto firstTeam, TeamDto secondTeam, Date matchDate, String groupName, String result) {
+    public MatchDto(UUID uuid, TeamDto firstTeam, TeamDto secondTeam, Date matchDate, String groupName, String result) {
         this.uuid = uuid;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
@@ -24,7 +23,7 @@ public class GameDto {
         this.result = result;
     }
 
-    public GameDto(TeamDto firstTeam, TeamDto secondTeam, Date matchDate, String groupName, String result) {
+    public MatchDto(TeamDto firstTeam, TeamDto secondTeam, Date matchDate, String groupName, String result) {
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;
         this.matchDate = matchDate;

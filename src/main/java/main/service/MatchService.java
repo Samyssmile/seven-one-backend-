@@ -1,10 +1,10 @@
 package main.service;
 
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
-import main.dto.GameDto;
+import main.dto.MatchDto;
 import main.dto.PredictionDto;
 import main.dto.Result;
-import main.entity.GameEntity;
+import main.entity.MatchEntity;
 import main.entity.PredictionEntity;
 import main.request.CreateGameRequest;
 import main.request.GameUpdateRequest;
@@ -19,13 +19,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public class GameService {
+public class MatchService {
     private static final Logger LOGGER = Logger.getLogger("GameService");
     private final PredictionService predictionService;
     private ModelMapper modelMapper = new ModelMapper();
 
     @Inject
-    public GameService(PredictionService predictionService) {
+    public MatchService(PredictionService predictionService) {
         this.predictionService = predictionService;
         //strict matchingstrategie strict
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
@@ -54,35 +54,35 @@ public class GameService {
 //    }
 
     @Transactional
-    public Optional<GameEntity> saveNewGame(CreateGameRequest createGameRequest) {
-        var gameEntity = modelMapper.map(createGameRequest, GameEntity.class);
+    public Optional<MatchEntity> saveNewGame(CreateGameRequest createGameRequest) {
+        var gameEntity = modelMapper.map(createGameRequest, MatchEntity.class);
         gameEntity.persistAndFlush();
         return Optional.of(gameEntity);
     }
 
-    public List<GameDto> getAllGames() {
-        PanacheQuery<GameEntity> gameEntityList = GameEntity.findAll();
-        List<GameDto> gameDtoList = gameEntityList.stream().map(gameEntity -> modelMapper.map(gameEntity, GameDto.class)).collect(Collectors.toList());
-        return gameDtoList;
+    public List<MatchDto> getAllMatches() {
+        PanacheQuery<MatchEntity> gameEntityList = MatchEntity.findAll();
+        List<MatchDto> matchDtoList = gameEntityList.stream().map(matchEntity -> modelMapper.map(matchEntity, MatchDto.class)).collect(Collectors.toList());
+        return matchDtoList;
     }
 
-    public Optional<GameDto> getGameByUuid(UUID uuid) {
-        GameEntity gameEntity = GameEntity.find("uuid", uuid).firstResult();
-        GameDto result = modelMapper.map(gameEntity, GameDto.class);
+    public Optional<MatchDto> getGameByUuid(UUID uuid) {
+        MatchEntity matchEntity = MatchEntity.find("uuid", uuid).firstResult();
+        MatchDto result = modelMapper.map(matchEntity, MatchDto.class);
         return Optional.ofNullable(result);
     }
 
-    public List<GameDto> getUnpredictedGamesByUser(UUID clientUuid) {
+    public List<MatchDto> getUnpredictedGamesByUser(UUID clientUuid) {
         List<PredictionEntity> predictionEntityList = PredictionEntity.findByClientUuid(clientUuid);
-        List<GameEntity> gameEntityList = GameEntity.listAll();
+        List<MatchEntity> matchEntityList = MatchEntity.listAll();
         predictionEntityList.forEach(predictionEntity -> {
-            gameEntityList.removeIf(gameEntity -> gameEntity.getUuid().equals(predictionEntity.getGameUuid()));
+            matchEntityList.removeIf(matchEntity -> matchEntity.getUuid().equals(predictionEntity.getMatchUuid()));
         });
-        List<GameDto> gameDtoList = gameEntityList.stream().map(gameEntity -> modelMapper.map(gameEntity, GameDto.class)).collect(Collectors.toList());
-        return gameDtoList;
+        List<MatchDto> matchDtoList = matchEntityList.stream().map(matchEntity -> modelMapper.map(matchEntity, MatchDto.class)).collect(Collectors.toList());
+        return matchDtoList;
     }
 
-    public Optional<GameDto> updateGame(GameUpdateRequest gameDto) {
+    public Optional<MatchDto> updateGame(GameUpdateRequest gameDto) {
         String result = gameDto.getResult();
         if (result != null) {
             this.updateAndTriggerScoreUpdate(gameDto);
@@ -94,8 +94,8 @@ public class GameService {
     }
 
     private void updateGameWithOutScoreUpdate(GameUpdateRequest gameDto) {
-        GameEntity gameEntity = modelMapper.map(gameDto, GameEntity.class);
-        gameEntity.persistAndFlush();
+        MatchEntity matchEntity = modelMapper.map(gameDto, MatchEntity.class);
+        matchEntity.persistAndFlush();
     }
 
 
@@ -156,14 +156,14 @@ public class GameService {
         return Result.ABORTED;
     }
 
-    public Set<GameDto> getPredictedGamesByUser(UUID clientUuid) {
+    public Set<MatchDto> getPredictedMatchesByUser(UUID clientUuid) {
         List<PredictionEntity> predictionEntityList = PredictionEntity.findByClientUuid(clientUuid);
-        Set<GameDto> gameDtoSet = new HashSet<>();
+        Set<MatchDto> matchDtoSet = new HashSet<>();
         predictionEntityList.forEach(predictionEntity -> {
-            GameEntity gameEntity = GameEntity.find("uuid", predictionEntity.getGameUuid()).firstResult();
-            GameDto gameDto = modelMapper.map(gameEntity, GameDto.class);
-            gameDtoSet.add(gameDto);
+            MatchEntity matchEntity = MatchEntity.find("uuid", predictionEntity.getMatchUuid()).firstResult();
+            MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
+            matchDtoSet.add(matchDto);
         });
-        return gameDtoSet;
+        return matchDtoSet;
     }
 }

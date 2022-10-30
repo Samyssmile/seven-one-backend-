@@ -2,7 +2,7 @@ package main;
 
 import io.quarkus.test.junit.QuarkusTest;
 import main.dto.AuthenticatedUserDto;
-import main.dto.GameDto;
+import main.dto.MatchDto;
 import main.dto.PredictionDto;
 import main.dto.UserDto;
 import main.request.CreateGroupRequest;
@@ -20,16 +20,16 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
-class GameResourceTest {
+class MatchResourceTest {
 
     private static UUID firstUserUUID;
     private static UUID secondUserUUID;
     private static UUID thirdUserUUID;
 
     @Inject
-    GameResource gameResource;
+    MatchResource gameResource;
     @Inject
-    GameService gameService;
+    MatchService matchService;
     @Inject
     UserService userService;
     @Inject
@@ -53,9 +53,9 @@ class GameResourceTest {
     @Test
     void shouldLeadTheRankLadder() {
         // Given two games
-        List<GameDto> allGames = gameService.getAllGames();
-        GameDto firstGame = gameService.getAllGames().get(5);
-        GameDto secondGame = gameService.getAllGames().get(6);
+        List<MatchDto> allGames = matchService.getAllMatches();
+        MatchDto firstGame = matchService.getAllMatches().get(5);
+        MatchDto secondGame = matchService.getAllMatches().get(6);
 
         // Create a new User JonSnow
         CreateUserRequest createUserRequest = new CreateUserRequest();
@@ -66,13 +66,13 @@ class GameResourceTest {
         PredictionDto exactPrediction = new PredictionDto();
         exactPrediction.setPrediction("9:1");
         exactPrediction.setClientUuid(testAuthenticatedUserDto.getClientUuid());
-        exactPrediction.setGameUuid(firstGame.getUuid());
+        exactPrediction.setMatchUuid(firstGame.getUuid());
         predictionService.makePrediction(exactPrediction);
 
         PredictionDto partialPrediction = new PredictionDto();
         partialPrediction.setPrediction("9:3");
         partialPrediction.setClientUuid(testAuthenticatedUserDto.getClientUuid());
-        partialPrediction.setGameUuid(secondGame.getUuid());
+        partialPrediction.setMatchUuid(secondGame.getUuid());
         predictionService.makePrediction(partialPrediction);
 
         GameUpdateRequest firstGameUpdate = new GameUpdateRequest();
@@ -91,8 +91,8 @@ class GameResourceTest {
         secondGameUpdate.setMatchDate(secondGame.getMatchDate());
         secondGameUpdate.setGroupName(secondGame.getGroupName());
 
-        gameService.updateGame(firstGameUpdate);
-        gameService.updateGame(secondGameUpdate);
+        matchService.updateGame(firstGameUpdate);
+        matchService.updateGame(secondGameUpdate);
 
         List<UserDto> rankedList = userService.getRankingList();
         assertTrue(rankedList.get(0).sameUser(testAuthenticatedUserDto.getClientUuid()));

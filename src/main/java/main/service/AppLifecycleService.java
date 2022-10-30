@@ -37,8 +37,8 @@ public class AppLifecycleService {
     }
 
     @Transactional
-    public static void persistGame(GameEntity gameEntity) {
-        gameEntity.persistAndFlush();
+    public static void persistGame(MatchEntity matchEntity) {
+        matchEntity.persistAndFlush();
     }
 
     private static String getRandomPredictionScore() {
@@ -53,9 +53,9 @@ public class AppLifecycleService {
         if (activeProfile.equals("dev") || activeProfile.equals("test")) {
             List<TeamEntity> teamList = initTeams();
             List<GroupEntity> groupList = initGroups(teamList);
-            List<GameEntity> gameEntityList = initFifaWorld2022MatchSchedule(groupList);
+            List<MatchEntity> matchEntityList = initFifaWorld2022MatchSchedule(groupList);
             List<UserEntity> userEntityList = initUsers();
-            initPredictions(userEntityList, gameEntityList);
+            initPredictions(userEntityList, matchEntityList);
         } else {
             LOGGER.info("No data initialization for profile " + activeProfile);
         }
@@ -70,13 +70,13 @@ public class AppLifecycleService {
         return value.orElseThrow(IllegalArgumentException::new);
     }
 
-    private List<PredictionDto> initPredictions(List<UserEntity> userEntityList, List<GameEntity> gameEntityList) {
+    private List<PredictionDto> initPredictions(List<UserEntity> userEntityList, List<MatchEntity> matchEntityList) {
         LOGGER.info("Init Predictions");
         userEntityList.parallelStream().forEach(userEntity -> {
             List<PredictionEntity> predictionDtos = new ArrayList<>();
-            gameEntityList.forEach(gameEntity -> {
+            matchEntityList.forEach(matchEntity -> {
                 PredictionEntity predictionEntity = new PredictionEntity();
-                predictionEntity.setGameUuid(gameEntity.getUuid());
+                predictionEntity.setMatchUuid(matchEntity.getUuid());
                 predictionEntity.setClientUuid(userEntity.getClientUuid());
                 predictionEntity.setPrediction(getRandomPredictionScore());
                 predictionDtos.add(predictionEntity);
@@ -90,14 +90,14 @@ public class AppLifecycleService {
 
     @Transactional
     public void persistPredictions(List<PredictionEntity> predictionDtos) {
-        predictionDtos.forEach(element -> LOGGER.info("Testdata Generation: Persist Predictions " + element.getPrediction() + " Game: " + element.getGameUuid()));
+        predictionDtos.forEach(element -> LOGGER.info("Testdata Generation: Persist Predictions " + element.getPrediction() + " Game: " + element.getMatchUuid()));
         PredictionEntity.persist(predictionDtos);
         PredictionEntity.flush();
     }
 
     private List<UserEntity> initUsers() {
         LOGGER.info("Init Users...");
-        IntStream.range(0, 100).forEach(i -> {
+        IntStream.range(0, 0).forEach(i -> {
             CreateUserRequest createUserRequest = new CreateUserRequest();
             createUserRequest.setClientUuid(UUID.randomUUID());
             createUserRequest.setNickname(NameGenerator.generateName());
@@ -114,16 +114,16 @@ public class AppLifecycleService {
         return new Random().ints(0, 100).findFirst().getAsInt();
     }
 
-    private List<GameEntity> initFifaWorld2022MatchSchedule(List<GroupEntity> groupList) {
-        List<GameEntity> gameEntityList = new ArrayList<>();
+    private List<MatchEntity> initFifaWorld2022MatchSchedule(List<GroupEntity> groupList) {
+        List<MatchEntity> matchEntityList = new ArrayList<>();
         groupList.forEach(groupEntity -> {
             List<TeamEntity> teamEntityList = groupEntity.getTeams().stream().toList();
             for (int i = 0; i < teamEntityList.size(); i++) {
                 for (int j = i + 1; j < teamEntityList.size(); j++) {
-                    GameEntity gameEntity = new GameEntity();
-                    gameEntity.setFirstTeam(teamEntityList.get(i));
-                    gameEntity.setSecondTeam(teamEntityList.get(j));
-                    gameEntity.setGroupName(groupEntity.getGroupName());
+                    MatchEntity matchEntity = new MatchEntity();
+                    matchEntity.setFirstTeam(teamEntityList.get(i));
+                    matchEntity.setSecondTeam(teamEntityList.get(j));
+                    matchEntity.setGroupName(groupEntity.getGroupName());
                     Date date;
 
                     if (Math.random() > 0.5) {
@@ -134,18 +134,18 @@ public class AppLifecycleService {
                             date = Date.from(Instant.now());
                         } else {
                             date = Date.from(LocalDate.now().minusDays(1 + i).atStartOfDay(ZoneId.systemDefault()).plusHours(getRandomHours()).plusMinutes(getRandomMinutes()).toInstant());
-                            gameEntity.setResult(getRandomPredictionScore());
+                            matchEntity.setResult(getRandomPredictionScore());
                         }
                     }
 
-                    gameEntity.setMatchDate(date);
-                    gameEntityList.add(gameEntity);
+                    matchEntity.setMatchDate(date);
+                    matchEntityList.add(matchEntity);
                 }
             }
         });
-        gameEntityList.forEach(AppLifecycleService::persistGame);
-        LOGGER.info("GameEntityList: persisted " + gameEntityList.size() + " Games");
-        return gameEntityList;
+        matchEntityList.forEach(AppLifecycleService::persistGame);
+        LOGGER.info("GameEntityList: persisted " + matchEntityList.size() + " Games");
+        return matchEntityList;
     }
 
     private long getRandomMinutes() {

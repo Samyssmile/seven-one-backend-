@@ -1,5 +1,6 @@
 package main.service;
 
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.security.UnauthorizedException;
 import main.dto.PredictionDto;
@@ -32,7 +33,8 @@ public class PredictionService {
     @Transactional
     public Optional<PredictionEntity> makePrediction(PredictionDto predictionDto) {
         boolean valid = validatePrediction(predictionDto.getPrediction());
-        boolean checkUserExists = UserEntity.findByIdOptional(predictionDto.getClientUuid()).isPresent();
+        List<PanacheEntityBase> all = UserEntity.findAll().list();
+        boolean checkUserExists = UserEntity.find("clientUuid", predictionDto.getClientUuid()).firstResultOptional().isPresent();
 
         if (!checkUserExists){
             throw new UnauthorizedException();
@@ -40,7 +42,7 @@ public class PredictionService {
         if (valid ){
             PredictionEntity entity = modelMapper.map(predictionDto, PredictionEntity.class);
             List<PredictionEntity> clientPredictions = PredictionEntity.find("clientUuid", predictionDto.getClientUuid()).list();
-            List<PredictionEntity> persistedIdenticalEntities = clientPredictions.stream().filter(p->p.getGameUuid().equals(predictionDto.getGameUuid())).toList();
+            List<PredictionEntity> persistedIdenticalEntities = clientPredictions.stream().filter(p->p.getMatchUuid().equals(predictionDto.getMatchUuid())).toList();
             if (persistedIdenticalEntities.size() == 0) {
                 entity.persistAndFlush();
             }else{
@@ -51,7 +53,7 @@ public class PredictionService {
             // Patter match number - number
             Matcher matcher = pattern.matcher(entity.getPrediction());
             if(matcher.matches()) {
-                logger.info("Prediction made: " + entity.getPrediction() + "; Game " + entity.getGameUuid() + "; Firstteam " + entity.getPrediction().split(":")[0] + "; Secondteam" + entity.getPrediction().split(":")[1]);
+                logger.info("Prediction made: " + entity.getPrediction() + "; Game " + entity.getMatchUuid() + "; Firstteam " + entity.getPrediction().split(":")[0] + "; Secondteam" + entity.getPrediction().split(":")[1]);
                 return Optional.ofNullable(entity);
             } else {
                 logger.info("Prediction Pattern not matches: " + entity.getPrediction());

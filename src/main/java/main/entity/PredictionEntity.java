@@ -21,7 +21,7 @@ public class PredictionEntity extends PanacheEntityBase {
     private UUID clientUuid;
     @Column
     @Type(type = "org.hibernate.type.UUIDCharType")
-    private UUID gameUuid;
+    private UUID matchUuid;
     @Column
     private String prediction;
 
@@ -29,19 +29,19 @@ public class PredictionEntity extends PanacheEntityBase {
     }
 
 
-    public PredictionEntity(UUID uuid, UUID clientUuid, UUID gameUuid, String prediction) {
+    public PredictionEntity(UUID uuid, UUID clientUuid, UUID matchUuid, String prediction) {
         this.uuid = uuid;
         this.clientUuid = clientUuid;
-        this.gameUuid = gameUuid;
+        this.matchUuid = matchUuid;
         this.prediction = prediction;
     }
 
-    public UUID getGameUuid() {
-        return gameUuid;
+    public UUID getMatchUuid() {
+        return matchUuid;
     }
 
-    public void setGameUuid(UUID gameUuid) {
-        this.gameUuid = gameUuid;
+    public void setMatchUuid(UUID gameUuid) {
+        this.matchUuid = gameUuid;
     }
 
     public static List<PredictionEntity> findByClientUuid(UUID uuid) {

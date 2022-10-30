@@ -6,15 +6,15 @@ import java.util.UUID;
 
 public class PredictionDto {
     private UUID clientUuid;
-    private UUID gameUuid;
+    private UUID matchUuid;
     private String prediction;
 
     public PredictionDto() {
     }
 
-    public PredictionDto(UUID clientUuid, UUID gameUuid, String prediction) {
+    public PredictionDto(UUID clientUuid, UUID matchUuid, String prediction) {
         this.clientUuid = clientUuid;
-        this.gameUuid = gameUuid;
+        this.matchUuid = matchUuid;
         this.prediction = prediction;
     }
 
@@ -26,12 +26,12 @@ public class PredictionDto {
         this.clientUuid = clientUuid;
     }
 
-    public UUID getGameUuid() {
-        return gameUuid;
+    public UUID getMatchUuid() {
+        return matchUuid;
     }
 
-    public void setGameUuid(UUID gameUuid) {
-        this.gameUuid = gameUuid;
+    public void setMatchUuid(UUID matchUuid) {
+        this.matchUuid = matchUuid;
     }
 
     public String getPrediction() {
@@ -50,11 +50,11 @@ public class PredictionDto {
 
         PredictionDto that = (PredictionDto) o;
 
-        return new org.apache.commons.lang3.builder.EqualsBuilder().append(getClientUuid(), that.getClientUuid()).append(getGameUuid(), that.getGameUuid()).append(getPrediction(), that.getPrediction()).isEquals();
+        return new org.apache.commons.lang3.builder.EqualsBuilder().append(getClientUuid(), that.getClientUuid()).append(getMatchUuid(), that.getMatchUuid()).append(getPrediction(), that.getPrediction()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(getClientUuid()).append(getGameUuid()).append(getPrediction()).toHashCode();
+        return new HashCodeBuilder(17, 37).append(getClientUuid()).append(getMatchUuid()).append(getPrediction()).toHashCode();
     }
 }

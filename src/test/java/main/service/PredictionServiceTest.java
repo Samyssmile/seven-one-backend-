@@ -27,7 +27,7 @@ class PredictionServiceTest {
 
         PredictionDto predictionDto = new PredictionDto();
         predictionDto.setClientUuid(UUID.randomUUID());
-        predictionDto.setGameUuid(UUID.randomUUID());
+        predictionDto.setMatchUuid(UUID.randomUUID());
         predictionDto.setPrediction("3:5");
 
         Optional<PredictionEntity> savedEntity = predictionService.makePrediction(predictionDto);
@@ -46,7 +46,7 @@ class PredictionServiceTest {
 
         PredictionDto predictionDto = new PredictionDto();
         predictionDto.setClientUuid(UUID.randomUUID());
-        predictionDto.setGameUuid(UUID.randomUUID());
+        predictionDto.setMatchUuid(UUID.randomUUID());
         predictionDto.setPrediction("3:5");
 
         Optional<PredictionEntity> savedEntity = predictionService.makePrediction(predictionDto);
@@ -57,7 +57,7 @@ class PredictionServiceTest {
         List<PredictionDto> persistedPredictions = predictionService.findAllPredictions();
         assertEquals(1, persistedPredictions.size());
         assertEquals("5:5", persistedPredictions.get(0).getPrediction());
-        assertEquals(predictionDto.getGameUuid(), persistedPredictions.get(0).getGameUuid());
+        assertEquals(predictionDto.getMatchUuid(), persistedPredictions.get(0).getMatchUuid());
         assertEquals(predictionDto.getClientUuid(), persistedPredictions.get(0).getClientUuid());
         System.out.println(persistedPredictions.size());
     }
@@ -83,7 +83,7 @@ class PredictionServiceTest {
         for (int j = 0; j < i; j++) {
             PredictionDto predictionDto = new PredictionDto();
             predictionDto.setClientUuid(clientUuid);
-            predictionDto.setGameUuid(UUID.randomUUID());
+            predictionDto.setMatchUuid(UUID.randomUUID());
             predictionDto.setPrediction(random.nextInt(0, 10) + ":" + random.nextInt(0, 10));
             resultList.add(predictionDto);
         }
