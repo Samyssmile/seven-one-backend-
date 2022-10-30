@@ -28,7 +28,7 @@ pipeline {
                 echo 'start build image and publish it...'
                 withCredentials([usernamePassword(credentialsId: 'AkogareDockerRegistry', passwordVariable: 'password', usernameVariable: 'username')]) {
                     sh "docker login https://registry.akogare.de -u $username -p $password"
-                    sh 'docker build -f Dockerfile -t registry.akogare.de/seven-one-backend:1.0.0-BETA .'
+                    sh 'docker build -f src/main/docker/Dockerfile -t registry.akogare.de/seven-one-backend:1.0.0-BETA .'
 
                 }
             }
