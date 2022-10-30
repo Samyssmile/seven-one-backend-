@@ -17,7 +17,7 @@ pipeline {
             }
             steps {
                 echo 'Testing..'
-                sh './gradlew quarkusTest'
+                sh './gradlew :test --tests "main.MatchResourceTest" "-Dquarkus.profile=test"'
             }
         }
         stage('Building Image') {
