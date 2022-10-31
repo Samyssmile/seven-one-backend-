@@ -31,6 +31,8 @@ public class ApplicationInfoResource {
     String dbKind;
     @ConfigProperty(name = "quarkus.datasource.jdbc.url")
     String dbUrl;
+    @ConfigProperty(name = "quarkus.profile")
+    String profile;
 
 
 
@@ -38,9 +40,9 @@ public class ApplicationInfoResource {
     @Path("/version")
     @Produces("application/json")
     @Operation(summary = "Get the version of the application.")
-    public Response getVersion() {
-        ApplicationInfoResponse applicationInfoResponse = new ApplicationInfoResponse(version, dbKind, dbUrl);
-        logger.info("Returning version: " + applicationInfoResponse);
+    public Response getApplicationInfo() {
+        ApplicationInfoResponse applicationInfoResponse = new ApplicationInfoResponse(version, dbKind, dbUrl, profile);
+        logger.info("Application Info Response: " + applicationInfoResponse);
         return Response.ok(applicationInfoResponse).build();
     }
 }
