@@ -40,8 +40,8 @@ public class PredictionEntity extends PanacheEntityBase {
         return matchUuid;
     }
 
-    public void setMatchUuid(UUID gameUuid) {
-        this.matchUuid = gameUuid;
+    public void setMatchUuid(UUID matchUuid) {
+        this.matchUuid = matchUuid;
     }
 
     public static List<PredictionEntity> findByClientUuid(UUID uuid) {

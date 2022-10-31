@@ -31,28 +31,6 @@ public class MatchService {
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
-//    public List<GameByUserResponse> findGamesByUserUuid(UUID uuid) {
-//        List<PredictionEntity> predictionEntity = PredictionEntity.findByUserUuid(uuid);
-//        List<GameEntity> gameEntity = GameEntity.listAll();
-//        List<GameByUserResponse> gameByUserResponses = new ArrayList<>();
-//        gameEntity.forEach(game -> {
-//            predictionEntity.forEach(prediction -> {
-//                if (game.getUuid().equals(prediction.getGameUuid())) {
-//                    GameByUserResponse gameByUserResponse = new GameByUserResponse();
-//                    gameByUserResponse.setGroup(game.getGroupName());
-//                    gameByUserResponse.setFirstTeam(game.getFirstTeam());
-//                    gameByUserResponse.setSecondTeam(game.getSecondTeam());
-//                    gameByUserResponse.setMatchDate(game.getMatchDate());
-//                    gameByUserResponse.setResult(game.getResult());
-//                    gameByUserResponse.setPredictionDto(modelMapper.map(prediction, PredictionDto.class));
-//                    gameByUserResponses.add(gameByUserResponse);
-//                }
-//            });
-//        });
-//
-//        return gameByUserResponses;
-//    }
-
     @Transactional
     public Optional<MatchEntity> saveNewGame(CreateMatchRequest createMatchRequest) {
         var gameEntity = modelMapper.map(createMatchRequest, MatchEntity.class);
@@ -100,7 +78,7 @@ public class MatchService {
 
 
     private void updateAndTriggerScoreUpdate(MatchUpdateRequest gameDto) {
-        List<PredictionDto> predictionDtos = this.predictionService.findAllPredictionsByGameUuid(gameDto.getUuid());
+        List<PredictionDto> predictionDtos = this.predictionService.findAllPredictionsByMatchUuid(gameDto.getUuid());
 
         predictionDtos.forEach(predictionDto -> {
             int scoreEarned = getScoreForPrediction(predictionDto, gameDto);

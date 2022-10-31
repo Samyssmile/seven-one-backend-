@@ -63,7 +63,7 @@ public class PredictionResource {
     @Path("/")
     @Consumes("application/json")
     @Produces("application/json")
-    @Operation(summary = "Update prediction to an upcaming game.")
+    @Operation(summary = "Update prediction to an upcaming match.")
     @RolesAllowed({"app-user", "app-admin"})
     public Response updatePrediction(PredictionDto predictionDto) {
         return Response.ok(predictionDto).build();
@@ -81,7 +81,7 @@ public class PredictionResource {
     }
 
     private PredictionDto generateRandomPredictionDto() {
-        return new PredictionDto(UUID.randomUUID(), Utility.getRandoomGameUUID(),random.nextInt(10)+"-"+random.nextInt(10) );
+        return new PredictionDto(UUID.randomUUID(), Utility.getRandomMatchUUID(),random.nextInt(10)+"-"+random.nextInt(10) );
     }
 
     }

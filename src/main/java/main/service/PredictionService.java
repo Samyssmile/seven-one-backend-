@@ -105,8 +105,8 @@ public class PredictionService {
         return resultDtoList;
     }
 
-    public List<PredictionDto> findAllPredictionsByGameUuid(UUID gameUuid) {
-        List<PredictionEntity> filteredList = PredictionEntity.find("matchUuid", gameUuid).list();
+    public List<PredictionDto> findAllPredictionsByMatchUuid(UUID matchUuid) {
+        List<PredictionEntity> filteredList = PredictionEntity.find("matchUuid", matchUuid).list();
 
         return filteredList.stream().map(entity -> modelMapper.map(entity, PredictionDto.class)).toList();
     }

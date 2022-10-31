@@ -14,7 +14,7 @@ public class Utility {
     private static final UUID game_8 = UUID.fromString("00000000-0000-0000-0000-000000000008");
 
 
-    public static UUID getRandoomGameUUID() {
+    public static UUID getRandomMatchUUID() {
         int random = (int) (Math.random() * 8);
         switch (random) {
             case 0:
