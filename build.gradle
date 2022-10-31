@@ -30,7 +30,6 @@ dependencies {
     // -----
     implementation 'org.modelmapper:modelmapper:3.1.0'
     implementation 'org.apache.commons:commons-lang3:3.12.0'
-    //Quarkus MongoDB Driver
     implementation 'io.quarkus:quarkus-hibernate-orm-panache'
 
     testImplementation 'io.quarkus:quarkus-junit5'
