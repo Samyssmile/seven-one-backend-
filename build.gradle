@@ -38,7 +38,7 @@ dependencies {
 }
 
 group 'de.nexent'
-version '1.0.4-Alfa'
+version '1.0.1-BETA'
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
