@@ -50,7 +50,7 @@ public class AppLifecycleService {
     void onStart(@Observes StartupEvent ev) {
         String activeProfile = ProfileManager.getActiveProfile();
         LOGGER.info("The application is starting with profile " + activeProfile);
-        if (activeProfile.equals("dev") || activeProfile.equals("test")) {
+        if (activeProfile.equals("dev") || activeProfile.equals("test") || activeProfile.equals("staging")) {
             List<TeamEntity> teamList = initTeams();
             List<GroupEntity> groupList = initGroups(teamList);
             List<MatchEntity> matchEntityList = initFifaWorld2022MatchSchedule(groupList);
@@ -97,7 +97,7 @@ public class AppLifecycleService {
 
     private List<UserEntity> initUsers() {
         LOGGER.info("Init Users...");
-        IntStream.range(0, 0).forEach(i -> {
+        IntStream.range(0, 500).forEach(i -> {
             CreateUserRequest createUserRequest = new CreateUserRequest();
             createUserRequest.setClientUuid(UUID.randomUUID());
             createUserRequest.setNickname(NameGenerator.generateName());
