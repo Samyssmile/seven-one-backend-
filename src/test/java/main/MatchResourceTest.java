@@ -7,7 +7,7 @@ import main.dto.PredictionDto;
 import main.dto.UserDto;
 import main.request.CreateGroupRequest;
 import main.request.CreateUserRequest;
-import main.request.GameUpdateRequest;
+import main.request.MatchUpdateRequest;
 import main.service.*;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,7 +75,7 @@ class MatchResourceTest {
         partialPrediction.setMatchUuid(secondGame.getUuid());
         predictionService.makePrediction(partialPrediction);
 
-        GameUpdateRequest firstGameUpdate = new GameUpdateRequest();
+        MatchUpdateRequest firstGameUpdate = new MatchUpdateRequest();
         firstGameUpdate.setResult("9:1");
         firstGameUpdate.setUuid(firstGame.getUuid());
         firstGameUpdate.setFirstTeam(firstGame.getFirstTeam());
@@ -83,7 +83,7 @@ class MatchResourceTest {
         firstGameUpdate.setMatchDate(firstGame.getMatchDate());
         firstGameUpdate.setGroupName(firstGame.getGroupName());
 
-        GameUpdateRequest secondGameUpdate = new GameUpdateRequest();
+        MatchUpdateRequest secondGameUpdate = new MatchUpdateRequest();
         secondGameUpdate.setResult("8:3");
         secondGameUpdate.setUuid(secondGame.getUuid());
         secondGameUpdate.setFirstTeam(secondGame.getFirstTeam());

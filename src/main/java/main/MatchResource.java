@@ -2,8 +2,8 @@ package main;
 
 import main.dto.MatchDto;
 import main.entity.MatchEntity;
-import main.request.CreateGameRequest;
-import main.request.GameUpdateRequest;
+import main.request.CreateMatchRequest;
+import main.request.MatchUpdateRequest;
 import main.service.MatchService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 
@@ -29,8 +29,8 @@ public class MatchResource {
     @Consumes("application/json")
     @Operation(summary = "Create new match", description = "A match between two teams")
     @RolesAllowed({"app-admin"})
-    public Response postMatch(CreateGameRequest createGameRequest){
-        Optional<MatchEntity> optionalResponse = matchService.saveNewGame(createGameRequest);
+    public Response postMatch(CreateMatchRequest createMatchRequest){
+        Optional<MatchEntity> optionalResponse = matchService.saveNewGame(createMatchRequest);
         if (optionalResponse.isPresent()) {
             return Response.ok(optionalResponse.get()).build();
         } else {
@@ -67,8 +67,8 @@ public class MatchResource {
     @Produces("application/json")
     @Operation(summary = "Get all matches of a specific user that are not predicted by him.")
     @RolesAllowed({"app-user", "app-admin"})
-    public Response getUnpredictedGamesByUser(@QueryParam("clientUuid") UUID clientUuid) {
-        return Response.ok(this.matchService.getUnpredictedGamesByUser(clientUuid)).build();
+    public Response getUnpredictedMatchesByUser(@QueryParam("clientUuid") UUID clientUuid) {
+        return Response.ok(this.matchService.getUnpredictedMatchesByUser(clientUuid)).build();
     }
 
     //Get All Games of a specific user that are predicted by him.
@@ -88,7 +88,7 @@ public class MatchResource {
     @Consumes("application/json")
     @RolesAllowed("app-admin")
     @Operation(summary = "Update a match", description = "If a result is give, the game is finished and the result is saved. All Predictions will be analyzed and the points will be calculated.")
-    public Response updateGameResult(GameUpdateRequest gameDto) {
+    public Response updateGameResult(MatchUpdateRequest gameDto) {
         Optional<MatchDto> optionalResponse = this.matchService.updateGame(gameDto);
         if (optionalResponse.isPresent()) {
             return Response.ok(optionalResponse.get()).build();

@@ -3,7 +3,7 @@ package main.request;
 import java.util.Date;
 import java.util.UUID;
 
-public class CreateGameRequest {
+public class CreateMatchRequest {
 
     private UUID firstTeamUUID;
     private UUID secondTeamUUID;
@@ -11,10 +11,10 @@ public class CreateGameRequest {
     private String groupName;
     private String result;
 
-    public CreateGameRequest() {
+    public CreateMatchRequest() {
     }
 
-    public CreateGameRequest(UUID firstTeamUUID, UUID secondTeamUUID, Date matchDate, String groupName, String result) {
+    public CreateMatchRequest(UUID firstTeamUUID, UUID secondTeamUUID, Date matchDate, String groupName, String result) {
         this.firstTeamUUID = firstTeamUUID;
         this.secondTeamUUID = secondTeamUUID;
         this.matchDate = matchDate;

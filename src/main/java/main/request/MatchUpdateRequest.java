@@ -5,7 +5,7 @@ import main.dto.TeamDto;
 import java.util.Date;
 import java.util.UUID;
 
-public class GameUpdateRequest {
+public class MatchUpdateRequest {
     private UUID uuid;
     private TeamDto firstTeam;
     private TeamDto secondTeam;
@@ -13,10 +13,10 @@ public class GameUpdateRequest {
     private String groupName;
     private String result;
 
-    public GameUpdateRequest() {
+    public MatchUpdateRequest() {
     }
 
-    public GameUpdateRequest(UUID uuid, TeamDto firstTeam, TeamDto secondTeam, Date matchDate, String groupName, String result) {
+    public MatchUpdateRequest(UUID uuid, TeamDto firstTeam, TeamDto secondTeam, Date matchDate, String groupName, String result) {
         this.uuid = uuid;
         this.firstTeam = firstTeam;
         this.secondTeam = secondTeam;

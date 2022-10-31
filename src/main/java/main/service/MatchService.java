@@ -6,8 +6,8 @@ import main.dto.PredictionDto;
 import main.dto.Result;
 import main.entity.MatchEntity;
 import main.entity.PredictionEntity;
-import main.request.CreateGameRequest;
-import main.request.GameUpdateRequest;
+import main.request.CreateMatchRequest;
+import main.request.MatchUpdateRequest;
 import org.jboss.logging.Logger;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
@@ -54,8 +54,8 @@ public class MatchService {
 //    }
 
     @Transactional
-    public Optional<MatchEntity> saveNewGame(CreateGameRequest createGameRequest) {
-        var gameEntity = modelMapper.map(createGameRequest, MatchEntity.class);
+    public Optional<MatchEntity> saveNewGame(CreateMatchRequest createMatchRequest) {
+        var gameEntity = modelMapper.map(createMatchRequest, MatchEntity.class);
         gameEntity.persistAndFlush();
         return Optional.of(gameEntity);
     }
@@ -72,7 +72,7 @@ public class MatchService {
         return Optional.ofNullable(result);
     }
 
-    public List<MatchDto> getUnpredictedGamesByUser(UUID clientUuid) {
+    public List<MatchDto> getUnpredictedMatchesByUser(UUID clientUuid) {
         List<PredictionEntity> predictionEntityList = PredictionEntity.findByClientUuid(clientUuid);
         List<MatchEntity> matchEntityList = MatchEntity.listAll();
         predictionEntityList.forEach(predictionEntity -> {
@@ -82,7 +82,7 @@ public class MatchService {
         return matchDtoList;
     }
 
-    public Optional<MatchDto> updateGame(GameUpdateRequest gameDto) {
+    public Optional<MatchDto> updateGame(MatchUpdateRequest gameDto) {
         String result = gameDto.getResult();
         if (result != null) {
             this.updateAndTriggerScoreUpdate(gameDto);
@@ -93,13 +93,13 @@ public class MatchService {
         return null;
     }
 
-    private void updateGameWithOutScoreUpdate(GameUpdateRequest gameDto) {
+    private void updateGameWithOutScoreUpdate(MatchUpdateRequest gameDto) {
         MatchEntity matchEntity = modelMapper.map(gameDto, MatchEntity.class);
         matchEntity.persistAndFlush();
     }
 
 
-    private void updateAndTriggerScoreUpdate(GameUpdateRequest gameDto) {
+    private void updateAndTriggerScoreUpdate(MatchUpdateRequest gameDto) {
         List<PredictionDto> predictionDtos = this.predictionService.findAllPredictionsByGameUuid(gameDto.getUuid());
 
         predictionDtos.forEach(predictionDto -> {
@@ -108,11 +108,9 @@ public class MatchService {
                 this.predictionService.updateScoreForPrediction(predictionDto.getClientUuid(), scoreEarned);
             }
         });
-        // If Score matched, update Users score
-
     }
 
-    private int getScoreForPrediction(PredictionDto predictionDto, GameUpdateRequest gameDto) {
+    private int getScoreForPrediction(PredictionDto predictionDto, MatchUpdateRequest gameDto) {
         int score = 0;
         String result = gameDto.getResult();
         Result endResult = getResultFromFirstTeamPerspective(result);
