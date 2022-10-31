@@ -54,7 +54,7 @@ public class AppLifecycleService {
             List<TeamEntity> teamList = initTeams();
             List<GroupEntity> groupList = initGroups(teamList);
             List<MatchEntity> matchEntityList = initFifaWorld2022MatchSchedule(groupList);
-            List<UserEntity> userEntityList = initUsers();
+            List<UserEntity> userEntityList = initUsers(activeProfile.equals("test") ? 0 : 600);
             initPredictions(userEntityList, matchEntityList);
         } else {
             LOGGER.info("No data initialization for profile " + activeProfile);
@@ -95,9 +95,9 @@ public class AppLifecycleService {
         PredictionEntity.flush();
     }
 
-    private List<UserEntity> initUsers() {
+    private List<UserEntity> initUsers(int amountOfUsers) {
         LOGGER.info("Init Users...");
-        IntStream.range(0, 500).forEach(i -> {
+        IntStream.range(0, amountOfUsers).forEach(i -> {
             CreateUserRequest createUserRequest = new CreateUserRequest();
             createUserRequest.setClientUuid(UUID.randomUUID());
             createUserRequest.setNickname(NameGenerator.generateName());
