@@ -4,8 +4,6 @@ import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import javax.transaction.Transactional;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -13,7 +11,7 @@ import java.util.UUID;
 public class GroupEntity extends PanacheEntityBase {
     @Id
     @GeneratedValue
-    @Column(name = "uuid", updatable = false, nullable = false)
+    @Column(name = "uuid", updatable = true, nullable = false)
     @Type(type = "org.hibernate.type.UUIDCharType")
     private UUID uuid;
     @Column
@@ -22,7 +20,8 @@ public class GroupEntity extends PanacheEntityBase {
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TeamEntity> teams;
 
-    public GroupEntity() {}
+    public GroupEntity() {
+    }
 
 
     public GroupEntity(UUID uuid, String groupName, Set<TeamEntity> teams) {
@@ -30,6 +29,7 @@ public class GroupEntity extends PanacheEntityBase {
         this.groupName = groupName;
         this.teams = teams;
     }
+
     public Set<TeamEntity> getTeams() {
         return teams;
     }
@@ -53,7 +53,6 @@ public class GroupEntity extends PanacheEntityBase {
     public void setGroupName(String groupName) {
         this.groupName = groupName;
     }
-
 
 
 }

@@ -36,7 +36,7 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
         migrateMatchSchedule();
 
         String activeProfile = ProfileManager.getActiveProfile();
-        migrateUsers(activeProfile.equals("test") ? 0 : 600);
+        migrateUsers(activeProfile.equals("test") ? 0 : 50);
         migratePredictions(userEntityList, matchEntityList);
 
         migratePredictions(userEntityList, matchEntityList);
@@ -73,13 +73,13 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
 
         // Group E
         TeamEntity spain = new TeamEntity("Spain", "https://upload.wikimedia.org/wikipedia/en/9/9a/Flag_of_Spain.svg");
-        TeamEntity costaRica = new TeamEntity("Costa Rica", "https://upload.wikimedia.org/wikipedia/commons/b/bc/Flag_of_Costa_Rica.svg");
+        TeamEntity costaRica = new TeamEntity("Costa Rica", "https://upload.wikimedia.org/wikipedia/commons/f/f2/Flag_of_Costa_Rica.svg");
         TeamEntity germany = new TeamEntity("Germany", "https://upload.wikimedia.org/wikipedia/en/b/ba/Flag_of_Germany.svg");
         TeamEntity japan = new TeamEntity("Japan", "https://upload.wikimedia.org/wikipedia/en/9/9e/Flag_of_Japan.svg");
 
         // Group F
         TeamEntity belgium = new TeamEntity("Belgium", "https://upload.wikimedia.org/wikipedia/commons/6/65/Flag_of_Belgium.svg");
-        TeamEntity canada = new TeamEntity("Canada", "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Canada.svg");
+        TeamEntity canada = new TeamEntity("Canada", "https://upload.wikimedia.org/wikipedia/commons/d/d9/Flag_of_Canada_%28Pantone%29.svg");
         TeamEntity morocco = new TeamEntity("Morocco", "https://upload.wikimedia.org/wikipedia/commons/2/2c/Flag_of_Morocco.svg");
         TeamEntity croatia = new TeamEntity("Croatia", "https://upload.wikimedia.org/wikipedia/commons/1/1b/Flag_of_Croatia.svg");
 
@@ -135,6 +135,7 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
         teamEntityList.add(ghana);
         teamEntityList.add(uruguay);
         teamEntityList.add(koreaRepublic);
+
 
         LOGGER.info("Team Initialization done");
     }
@@ -524,7 +525,7 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
             CreateUserRequest createUserRequest = new CreateUserRequest();
             createUserRequest.setClientUuid(UUID.randomUUID());
             createUserRequest.setNickname(NameGenerator.generateName());
-            createUserRequest.setScore(generateRandomScore());
+            createUserRequest.setScore(0);
             userService.saveNewUser(createUserRequest);
         });
 

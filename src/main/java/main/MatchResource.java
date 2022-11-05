@@ -29,7 +29,7 @@ public class MatchResource {
     @Consumes("application/json")
     @Operation(summary = "Create new match", description = "A match between two teams")
     @RolesAllowed({"app-admin"})
-    public Response postMatch(CreateMatchRequest createMatchRequest){
+    public Response postMatch(CreateMatchRequest createMatchRequest) {
         Optional<MatchEntity> optionalResponse = matchService.saveNewGame(createMatchRequest);
         if (optionalResponse.isPresent()) {
             return Response.ok(optionalResponse.get()).build();
@@ -81,7 +81,6 @@ public class MatchResource {
         return Response.ok(this.matchService.getPredictedMatchesByUser(clientUuid)).build();
     }
 
-    //Update Game
     @PUT
     @Path("/update")
     @Produces("application/json")
