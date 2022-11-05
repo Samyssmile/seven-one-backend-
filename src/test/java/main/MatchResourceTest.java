@@ -38,6 +38,7 @@ class MatchResourceTest {
     GroupService groupService;
     @Inject
     TeamService teamService;
+
     // will be started before and stopped after each test method
     @BeforeAll
     public static void init() {
@@ -77,22 +78,15 @@ class MatchResourceTest {
 
         MatchUpdateRequest firstGameUpdate = new MatchUpdateRequest();
         firstGameUpdate.setResult("9:1");
-        firstGameUpdate.setUuid(firstGame.getUuid());
-        firstGameUpdate.setFirstTeam(firstGame.getFirstTeam());
-        firstGameUpdate.setSecondTeam(firstGame.getSecondTeam());
-        firstGameUpdate.setMatchDate(firstGame.getMatchDate());
-        firstGameUpdate.setGroupName(firstGame.getGroupName());
+        firstGameUpdate.setMatchUuid(firstGame.getUuid());
 
         MatchUpdateRequest secondGameUpdate = new MatchUpdateRequest();
         secondGameUpdate.setResult("8:3");
-        secondGameUpdate.setUuid(secondGame.getUuid());
-        secondGameUpdate.setFirstTeam(secondGame.getFirstTeam());
-        secondGameUpdate.setSecondTeam(secondGame.getSecondTeam());
-        secondGameUpdate.setMatchDate(secondGame.getMatchDate());
-        secondGameUpdate.setGroupName(secondGame.getGroupName());
+        secondGameUpdate.setMatchUuid(secondGame.getUuid());
 
-        matchService.updateGame(firstGameUpdate);
-        matchService.updateGame(secondGameUpdate);
+
+        matchService.updateMatchResult(firstGameUpdate);
+        matchService.updateMatchResult(secondGameUpdate);
 
         List<UserDto> rankedList = userService.getRankingList();
         assertTrue(rankedList.get(0).sameUser(testAuthenticatedUserDto.getClientUuid()));

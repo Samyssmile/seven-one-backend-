@@ -81,14 +81,14 @@ public class MatchResource {
         return Response.ok(this.matchService.getPredictedMatchesByUser(clientUuid)).build();
     }
 
-    @PUT
-    @Path("/update")
+    @POST
+    @Path("/update/score")
     @Produces("application/json")
     @Consumes("application/json")
     @RolesAllowed("app-admin")
-    @Operation(summary = "Update a match", description = "If a result is give, the game is finished and the result is saved. All Predictions will be analyzed and the points will be calculated.")
-    public Response updateGameResult(MatchUpdateRequest gameDto) {
-        Optional<MatchDto> optionalResponse = this.matchService.updateGame(gameDto);
+    @Operation(summary = "Update a match", description = "Set Match End Result. All Predictions will be analyzed and the points will be calculated.")
+    public Response updateGameResult(MatchUpdateRequest matchUpdateRequest) {
+        Optional<MatchDto> optionalResponse = this.matchService.updateMatchResult(matchUpdateRequest);
         if (optionalResponse.isPresent()) {
             return Response.ok(optionalResponse.get()).build();
         } else {

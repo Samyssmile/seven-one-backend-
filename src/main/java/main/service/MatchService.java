@@ -60,29 +60,12 @@ public class MatchService {
         return matchDtoList;
     }
 
-    public Optional<MatchDto> updateGame(MatchUpdateRequest gameDto) {
-        String result = gameDto.getResult();
-        if (result != null) {
-            this.updateAndTriggerScoreUpdate(gameDto);
-        } else {
-            this.updateGameWithOutScoreUpdate(gameDto);
-        }
-
-        return null;
-    }
-
-    private void updateGameWithOutScoreUpdate(MatchUpdateRequest gameDto) {
-        MatchEntity matchEntity = modelMapper.map(gameDto, MatchEntity.class);
-        matchEntity.persistAndFlush();
-    }
-
-
     private void updateAndTriggerScoreUpdate(MatchUpdateRequest gameDto) {
-        List<PredictionDto> predictionDtos = this.predictionService.findAllPredictionsByMatchUuid(gameDto.getUuid());
+        List<PredictionDto> predictionDtos = this.predictionService.findAllPredictionsByMatchUuid(gameDto.getMatchUuid());
 
         predictionDtos.forEach(predictionDto -> {
             int scoreEarned = getScoreForPrediction(predictionDto, gameDto);
-            if(scoreEarned > 0){
+            if (scoreEarned > 0) {
                 this.predictionService.updateScoreForPrediction(predictionDto.getClientUuid(), scoreEarned);
             }
         });
@@ -94,7 +77,7 @@ public class MatchService {
         Result endResult = getResultFromFirstTeamPerspective(result);
         Result predictedResult = getResultFromFirstTeamPerspective(predictionDto.getPrediction());
         if (endResult == predictedResult) {
-            score +=1;
+            score += 1;
             score += calculateExactPredictedScore(result, predictionDto.getPrediction());
         }
         return score;
@@ -141,5 +124,15 @@ public class MatchService {
             matchDtoSet.add(matchDto);
         });
         return matchDtoSet;
+    }
+
+    @Transactional
+    public Optional<MatchDto> updateMatchResult(MatchUpdateRequest matchUpdateRequest) {
+        MatchEntity matchEntity = MatchEntity.find("uuid", matchUpdateRequest.getMatchUuid()).firstResult();
+        matchEntity.setResult(matchUpdateRequest.getResult());
+        matchEntity.persistAndFlush();
+        updateAndTriggerScoreUpdate(matchUpdateRequest);
+        MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
+        return Optional.of(matchDto);
     }
 }

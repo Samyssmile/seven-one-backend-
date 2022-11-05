@@ -1,8 +1,10 @@
 package main.service;
 
 import io.quarkus.test.junit.QuarkusTest;
+import main.dto.AuthenticatedUserDto;
 import main.dto.PredictionDto;
 import main.entity.PredictionEntity;
+import main.request.CreateUserRequest;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -16,17 +18,26 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @QuarkusTest
 class PredictionServiceTest {
     private final PredictionService predictionService;
+    private final UserService userService;
     private final ThreadLocalRandom random = ThreadLocalRandom.current();
-    public PredictionServiceTest(PredictionService predictionService) {
+
+    public PredictionServiceTest(PredictionService predictionService, UserService userService) {
         this.predictionService = predictionService;
+        this.userService = userService;
     }
 
     @Test
     void shouldBeSingleRecordOnMultiplaceSaveOperations() {
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setNickname("testUser1");
+        createUserRequest.setScore(0);
+        createUserRequest.setClientUuid(UUID.randomUUID());
+
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
         this.predictionService.clearPredictions();
 
         PredictionDto predictionDto = new PredictionDto();
-        predictionDto.setClientUuid(UUID.randomUUID());
+        predictionDto.setClientUuid(savedUser.getClientUuid());
         predictionDto.setMatchUuid(UUID.randomUUID());
         predictionDto.setPrediction("3:5");
 
@@ -42,10 +53,16 @@ class PredictionServiceTest {
 
     @Test
     void shouldUpdatePrediction() {
-        this.predictionService.clearPredictions();
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setNickname("testUser1");
+        createUserRequest.setScore(0);
+        createUserRequest.setClientUuid(UUID.randomUUID());
 
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+
+        this.predictionService.clearPredictions();
         PredictionDto predictionDto = new PredictionDto();
-        predictionDto.setClientUuid(UUID.randomUUID());
+        predictionDto.setClientUuid(savedUser.getClientUuid());
         predictionDto.setMatchUuid(UUID.randomUUID());
         predictionDto.setPrediction("3:5");
 
@@ -63,10 +80,16 @@ class PredictionServiceTest {
     }
 
     @Test
-    void shouldFindAllPredictionsByClientUuid(){
+    void shouldFindAllPredictionsByClientUuid() {
+        CreateUserRequest createUserRequest = new CreateUserRequest();
+        createUserRequest.setNickname("testUser1");
+        createUserRequest.setScore(0);
+        createUserRequest.setClientUuid(UUID.randomUUID());
+
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
         this.predictionService.clearPredictions();
         int numberOfPredictions = 30;
-        UUID clientUuid = UUID.randomUUID();
+        UUID clientUuid = savedUser.getClientUuid();
         List<PredictionDto> predictionList = getDummyPredictionsOfClient(clientUuid, numberOfPredictions);
 
         predictionList.forEach(predictionDto -> predictionService.makePrediction(predictionDto));
@@ -91,6 +114,6 @@ class PredictionServiceTest {
     }
 
     private String getRandomPrediction() {
-        return random.nextInt(10)+": "+random.nextInt(10);
+        return random.nextInt(10) + ": " + random.nextInt(10);
     }
 }
