@@ -6,6 +6,7 @@ import main.dto.PredictionDto;
 import main.dto.Result;
 import main.entity.MatchEntity;
 import main.entity.PredictionEntity;
+import main.entity.UserEntity;
 import main.request.CreateMatchRequest;
 import main.request.MatchUpdateRequest;
 import org.jboss.logging.Logger;
@@ -128,11 +129,28 @@ public class MatchService {
 
     @Transactional
     public Optional<MatchDto> updateMatchResult(MatchUpdateRequest matchUpdateRequest) {
-        MatchEntity matchEntity = MatchEntity.find("uuid", matchUpdateRequest.getMatchUuid()).firstResult();
-        matchEntity.setResult(matchUpdateRequest.getResult());
-        matchEntity.persistAndFlush();
-        updateAndTriggerScoreUpdate(matchUpdateRequest);
-        MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
-        return Optional.of(matchDto);
+        Optional<MatchEntity> optionalMatchEntity = Optional.ofNullable(MatchEntity.find("uuid", matchUpdateRequest.getMatchUuid()).firstResult());
+
+        if (optionalMatchEntity.isPresent()) {
+            MatchEntity matchEntity = optionalMatchEntity.get();
+            matchEntity.setResult(matchUpdateRequest.getResult());
+            matchEntity.persistAndFlush();
+            updateAndTriggerScoreUpdate(matchUpdateRequest);
+            updateAndTriggerRankingUpdate();
+            MatchDto matchDto = modelMapper.map(matchEntity, MatchDto.class);
+            return Optional.of(matchDto);
+        }
+        return Optional.empty();
+
+    }
+
+    @Transactional
+    public void updateAndTriggerRankingUpdate() {
+        List<UserEntity> clientEntityList = UserEntity.listAll();
+        clientEntityList.sort(Comparator.comparingInt(UserEntity::getScore).reversed());
+        for (int i = 0; i < clientEntityList.size(); i++) {
+            clientEntityList.get(i).setRank(i + 1);
+        }
+        UserEntity.persist(clientEntityList);
     }
 }
