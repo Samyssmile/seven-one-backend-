@@ -8,7 +8,7 @@ pipeline {
             steps {
                 echo 'Building...'
                 sh 'docker ps'
-                sh './gradlew clean assemble'
+                sh './gradlew clean assemble "-Dquarkus.profile=prod"'
             }
         }
         stage('Test') {
@@ -29,7 +29,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'AkogareDockerRegistry', passwordVariable: 'password', usernameVariable: 'username')]) {
                     sh "docker login https://registry.akogare.de -u $username -p $password"
                     sh "ls -la"
-                    sh 'docker build -f src/main/docker/Dockerfile.jvm -t registry.akogare.de/seven-one-backend:1.0.2-BETA .'
+                    sh 'docker build -f src/main/docker/Dockerfile.jvm -t registry.akogare.de/seven-one-backend:1.0.3-BETA .'
 
                 }
             }
@@ -40,7 +40,7 @@ pipeline {
                 echo 'start pushing image'
                 withCredentials([usernamePassword(credentialsId: 'AkogareDockerRegistry', passwordVariable: 'password', usernameVariable: 'username')]) {
                     sh "docker login https://registry.akogare.de -u $username -p $password"
-                    sh 'docker push registry.akogare.de/seven-one-backend:1.0.2-BETA'
+                    sh 'docker push registry.akogare.de/seven-one-backend:1.0.3-BETA'
                 }
             }
         }
