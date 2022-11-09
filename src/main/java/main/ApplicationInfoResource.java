@@ -27,13 +27,10 @@ public class ApplicationInfoResource {
 
     @ConfigProperty(name = "quarkus.application.version")
     String version;
-    @ConfigProperty(name = "quarkus.datasource.db-kind")
-    String dbKind;
     @ConfigProperty(name = "quarkus.datasource.jdbc.url")
     String dbUrl;
     @ConfigProperty(name = "quarkus.profile")
     String profile;
-
 
 
     @GET
@@ -41,7 +38,7 @@ public class ApplicationInfoResource {
     @Produces("application/json")
     @Operation(summary = "Get the version of the application.")
     public Response getApplicationInfo() {
-        ApplicationInfoResponse applicationInfoResponse = new ApplicationInfoResponse(version, dbKind, dbUrl, profile);
+        ApplicationInfoResponse applicationInfoResponse = new ApplicationInfoResponse(version, dbUrl, profile);
         logger.info("Application Info Response: " + applicationInfoResponse);
         return Response.ok(applicationInfoResponse).build();
     }

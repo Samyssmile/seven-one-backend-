@@ -11,15 +11,15 @@ pipeline {
                 sh './gradlew clean assemble "-Dquarkus.profile=prod"'
             }
         }
-        stage('Test') {
-            tools {
-                jdk "JDK17"
-            }
-            steps {
-                echo 'Testing..'
-                sh './gradlew :test --tests "main.MatchResourceTest" "-Dquarkus.profile=test"'
-            }
-        }
+//        stage('Test') {
+//            tools {
+//                jdk "JDK17"
+//            }
+//            steps {
+//                echo 'Testing..'
+//                sh './gradlew :test --tests "main.MatchResourceTest" "-Dquarkus.profile=test"'
+//            }
+//        }
         stage('Building Image') {
             tools {
                 jdk "JDK17"
