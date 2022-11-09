@@ -16,7 +16,8 @@ dependencies {
     implementation 'io.quarkus:quarkus-resteasy-reactive-jackson'
     implementation 'io.quarkus:quarkus-hibernate-orm'
     implementation 'io.quarkus:quarkus-smallrye-openapi'
-    implementation 'io.quarkus:quarkus-jdbc-mariadb'
+    // Postgres Driver
+    implementation 'io.quarkus:quarkus-jdbc-postgresql'
     //H2 Database
     implementation 'io.quarkus:quarkus-jdbc-h2'
 
