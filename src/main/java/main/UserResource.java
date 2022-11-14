@@ -35,20 +35,20 @@ public class UserResource {
 
 
     @POST
-    @Path("/account/create")
+    @Path("/create")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Create User Accoount", description = "Create user")
     @PermitAll
     public Response createUser(CreateUserRequest createUserRequest) {
         var userEntity = userService.saveNewUser(createUserRequest);
-        logger.info("Create User Request: "+createUserRequest.getNickname()+ " "+createUserRequest.getClientUuid());
+        logger.info("Create User Request: " + createUserRequest.getNickname() + " " + createUserRequest.getClientUuid());
         return Response.ok(userEntity).build();
     }
 
 
     @GET
-    @Path("/account/login")
+    @Path("/login")
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(summary = "Get User Account by his UUID", description = "Get user account")
     @PermitAll
@@ -68,5 +68,15 @@ public class UserResource {
     public Response getAllUsers() {
         logger.info("Incoming Get All Users Request");
         return Response.ok(userService.findAllUsers()).build();
+    }
+
+    @DELETE
+    @Path("/delete")
+    @Operation(summary = "Delete User Account by his UUID", description = "Delete user account")
+    @RolesAllowed({"app-user"})
+    public Response deleteUser(@QueryParam("clientUuid") UUID clientUuid) {
+        logger.info("Incoming Delete User Request -" + clientUuid);
+        var deleted = userService.removeUserByUuid(clientUuid);
+        return deleted ? Response.ok().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 }

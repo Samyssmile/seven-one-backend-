@@ -39,7 +39,7 @@ public class UserService {
         UserEntity userEntity = modelMapper.map(createUserRequest, UserEntity.class);
         userEntity.setUuid(null);
         userEntity.setRole(Role.USER);
-        userEntity.setNickname(createUserRequest.getNickname()+"#"+generateFourDigitNumber());
+        userEntity.setNickname(createUserRequest.getNickname() + "#" + generateFourDigitNumber());
         userEntity.setScore(createUserRequest.getScore());
         userEntity.persistAndFlush();
         AuthenticatedUserDto authenticatedUserDto = modelMapper.map(userEntity, AuthenticatedUserDto.class);
@@ -47,7 +47,7 @@ public class UserService {
         return authenticatedUserDto;
     }
 
-    private int generateFourDigitNumber(){
+    private int generateFourDigitNumber() {
         return (int) (Math.random() * 9000) + 1000;
     }
 
@@ -93,5 +93,15 @@ public class UserService {
         rankedAuthenticatedUserDtoListDto.forEach(userDto -> userDto.setRank(rankedAuthenticatedUserDtoListDto.indexOf(userDto) + 1));
 
         return rankedAuthenticatedUserDtoListDto;
+    }
+
+    @Transactional
+    public boolean removeUserByUuid(UUID clientUuid) {
+        UserEntity userEntity = UserEntity.find("clientUuid", clientUuid).firstResult();
+        if (userEntity != null) {
+            userEntity.delete("clientUuid", clientUuid);
+            return true;
+        }
+        return false;
     }
 }

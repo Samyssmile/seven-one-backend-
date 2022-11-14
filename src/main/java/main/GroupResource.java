@@ -14,14 +14,12 @@ import java.util.UUID;
 
 @Path("/groups")
 public class GroupResource {
-
     private final GroupService groupService;
 
     @Inject
     public GroupResource(GroupService groupService) {
         this.groupService = groupService;
     }
-
 
     @GET
     @Path("/all")
