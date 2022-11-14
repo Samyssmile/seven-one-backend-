@@ -3,6 +3,7 @@ package main.service;
 import main.dto.AuthenticatedUserDto;
 import main.dto.Role;
 import main.dto.UserDto;
+import main.entity.PredictionEntity;
 import main.entity.UserEntity;
 import main.request.CreateUserRequest;
 import main.response.UserLoginSucceedResponse;
@@ -100,6 +101,7 @@ public class UserService {
         UserEntity userEntity = UserEntity.find("clientUuid", clientUuid).firstResult();
         if (userEntity != null) {
             userEntity.delete("clientUuid", clientUuid);
+            PredictionEntity.findByClientUuid(clientUuid).forEach(PredictionEntity::delete);
             return true;
         }
         return false;
