@@ -4,6 +4,12 @@ This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
 If you want to learn more about Quarkus, please visit its website: https://quarkus.io/ .
 
+## Local Development
+Start PostgresDB Container with.
+
+    docker compose up
+Start Quarkus Backend
+
 ## Staging URL
 Use this URL for staging environment.
 
