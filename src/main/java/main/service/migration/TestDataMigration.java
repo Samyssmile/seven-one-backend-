@@ -224,9 +224,9 @@ public class TestDataMigration implements IDataMigration {
         IntStream.range(0, amountOfUsers).forEach(i -> {
             CreateUserRequest createUserRequest = new CreateUserRequest();
             createUserRequest.setClientUuid(UUID.randomUUID());
-            createUserRequest.setNickname(NameGenerator.generateName());
+            createUserRequest.setNickname(NameGenerator.generateGenericName());
             createUserRequest.setScore(generateRandomScore());
-            userService.saveNewUser(createUserRequest);
+            userService.saveNewUser(createUserRequest, true);
         });
 
         LOGGER.info("Users initialized");

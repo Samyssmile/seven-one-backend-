@@ -5,7 +5,6 @@ import java.util.UUID;
 public class CreateUserRequest {
     private UUID clientUuid;
     private String nickname;
-
     private int score;
 
 

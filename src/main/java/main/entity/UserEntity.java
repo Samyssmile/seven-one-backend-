@@ -27,36 +27,22 @@ public class UserEntity extends PanacheEntityBase {
     private int score;
     @Column
     private int rank;
-
+    @Column
+    private boolean bot;
     @Column
     private Role role;
 
     public UserEntity() {
     }
 
-    public UserEntity(UUID uuid, UUID clientUuid, String nickname, int score, int rank, Role role) {
+    public UserEntity(UUID uuid, UUID clientUuid, String nickname, int score, int rank, boolean bot, Role role) {
         this.uuid = uuid;
         this.clientUuid = clientUuid;
         this.nickname = nickname;
         this.score = score;
         this.rank = rank;
+        this.bot = bot;
         this.role = role;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public UUID getClientUuid() {
-        return clientUuid;
-    }
-
-    public void setClientUuid(UUID clientUuid) {
-        this.clientUuid = clientUuid;
     }
 
     public UUID getUuid() {
@@ -65,6 +51,14 @@ public class UserEntity extends PanacheEntityBase {
 
     public void setUuid(UUID uuid) {
         this.uuid = uuid;
+    }
+
+    public UUID getClientUuid() {
+        return clientUuid;
+    }
+
+    public void setClientUuid(UUID clientUuid) {
+        this.clientUuid = clientUuid;
     }
 
     public String getNickname() {
@@ -89,5 +83,21 @@ public class UserEntity extends PanacheEntityBase {
 
     public void setRank(int rank) {
         this.rank = rank;
+    }
+
+    public boolean isBot() {
+        return bot;
+    }
+
+    public void setBot(boolean bot) {
+        this.bot = bot;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

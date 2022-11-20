@@ -8,6 +8,7 @@ import main.service.UserService;
 import main.utility.NameGenerator;
 import org.jboss.logging.Logger;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -36,8 +37,8 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
         migrateMatchSchedule();
 
         String activeProfile = ProfileManager.getActiveProfile();
-        migrateUsers(activeProfile.equals("test") ? 0 : 50);
-        migratePredictions(userEntityList, matchEntityList);
+        migrateUsers(activeProfile.equals("test") ? 0 : 237);
+        List<UserEntity> userEntityList = UserEntity.findAll().list();
 
         migratePredictions(userEntityList, matchEntityList);
 
@@ -521,12 +522,26 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
     @Override
     public void migrateUsers(int amountOfUsers) {
         LOGGER.info("Init Users...");
+        String[] realNames;
+        String[] userNames;
+        Random random = new Random();
+        try {
+
+            realNames = NameGenerator.getRealNames();
+            userNames = NameGenerator.getUserNames();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         IntStream.range(0, amountOfUsers).forEach(i -> {
             CreateUserRequest createUserRequest = new CreateUserRequest();
             createUserRequest.setClientUuid(UUID.randomUUID());
-            createUserRequest.setNickname(NameGenerator.generateName());
+            if (random.nextInt(100) < 20) {
+                createUserRequest.setNickname(realNames[random.nextInt(realNames.length)]);
+            } else {
+                createUserRequest.setNickname(userNames[random.nextInt(userNames.length)]);
+            }
             createUserRequest.setScore(0);
-            userService.saveNewUser(createUserRequest);
+            userService.saveNewUser(createUserRequest, true);
         });
 
         LOGGER.info("Users initialized");

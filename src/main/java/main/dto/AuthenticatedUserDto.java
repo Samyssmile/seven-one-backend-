@@ -12,16 +12,22 @@ public class AuthenticatedUserDto {
     private int score;
     private int rank;
 
+    private boolean bot;
+
     private String jwt;
 
     public AuthenticatedUserDto() {
     }
 
-    public AuthenticatedUserDto(String nickname, int score, int rank) {
+    public AuthenticatedUserDto(UUID clientUuid, String nickname, int score, int rank, boolean bot, String jwt) {
+        this.clientUuid = clientUuid;
         this.nickname = nickname;
         this.score = score;
         this.rank = rank;
+        this.bot = bot;
+        this.jwt = jwt;
     }
+
 
     public AuthenticatedUserDto(UUID clientUuid, String nickname, int score, int rank) {
         this.clientUuid = clientUuid;
@@ -78,7 +84,7 @@ public class AuthenticatedUserDto {
         this.rank = rank;
     }
 
-    public boolean sameUser(UUID uuid){
+    public boolean sameUser(UUID uuid) {
         return this.clientUuid.equals(uuid);
     }
 
@@ -96,5 +102,13 @@ public class AuthenticatedUserDto {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(getClientUuid()).append(getNickname()).append(getScore()).append(getRank()).toHashCode();
+    }
+
+    public boolean isBot() {
+        return bot;
+    }
+
+    public void setBot(boolean bot) {
+        this.bot = bot;
     }
 }

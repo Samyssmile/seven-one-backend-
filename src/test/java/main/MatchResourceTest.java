@@ -62,7 +62,7 @@ class MatchResourceTest {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setClientUuid(firstUserUUID);
         createUserRequest.setNickname("JonSnow");
-        AuthenticatedUserDto testAuthenticatedUserDto = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto testAuthenticatedUserDto = userService.saveNewUser(createUserRequest, false);
 
         PredictionDto exactPrediction = new PredictionDto();
         exactPrediction.setPrediction("9:1");

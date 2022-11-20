@@ -36,12 +36,13 @@ public class UserService {
     }
 
     @Transactional
-    public AuthenticatedUserDto saveNewUser(CreateUserRequest createUserRequest) {
+    public AuthenticatedUserDto saveNewUser(CreateUserRequest createUserRequest, boolean bot) {
         UserEntity userEntity = modelMapper.map(createUserRequest, UserEntity.class);
         userEntity.setUuid(null);
         userEntity.setRole(Role.USER);
         userEntity.setNickname(createUserRequest.getNickname() + "#" + generateFourDigitNumber());
         userEntity.setScore(createUserRequest.getScore());
+        userEntity.setBot(bot);
         userEntity.persistAndFlush();
         AuthenticatedUserDto authenticatedUserDto = modelMapper.map(userEntity, AuthenticatedUserDto.class);
         authenticatedUserDto.setJwt(jwtService.generateUserJwt());

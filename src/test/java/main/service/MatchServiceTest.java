@@ -52,7 +52,7 @@ class MatchServiceTest {
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
         PredictionDto predictionDto = new PredictionDto();
         predictionDto.setClientUuid(savedUser.getClientUuid());
@@ -82,7 +82,7 @@ class MatchServiceTest {
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
         PredictionDto predictionDto = new PredictionDto();
         predictionDto.setClientUuid(savedUser.getClientUuid());
@@ -112,7 +112,7 @@ class MatchServiceTest {
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
         PredictionDto predictionDto = new PredictionDto();
         predictionDto.setClientUuid(savedUser.getClientUuid());
@@ -142,7 +142,7 @@ class MatchServiceTest {
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
         PredictionDto predictionDto = new PredictionDto();
         predictionDto.setClientUuid(savedUser.getClientUuid());

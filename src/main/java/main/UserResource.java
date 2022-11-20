@@ -41,7 +41,7 @@ public class UserResource {
     @Operation(summary = "Create User Accoount", description = "Create user")
     @PermitAll
     public Response createUser(CreateUserRequest createUserRequest) {
-        var userEntity = userService.saveNewUser(createUserRequest);
+        var userEntity = userService.saveNewUser(createUserRequest, false);
         logger.info("Create User Request: " + createUserRequest.getNickname() + " " + createUserRequest.getClientUuid());
         return Response.ok(userEntity).build();
     }

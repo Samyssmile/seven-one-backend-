@@ -38,7 +38,9 @@ public class ApplicationInfoResource {
     @Produces("application/json")
     @Operation(summary = "Get the version of the application.")
     public Response getApplicationInfo() {
-        ApplicationInfoResponse applicationInfoResponse = new ApplicationInfoResponse(version, dbUrl, profile);
+        //formatted date time
+        String serverDatetime = new java.util.Date().toString();
+        ApplicationInfoResponse applicationInfoResponse = new ApplicationInfoResponse(version, dbUrl, profile, serverDatetime);
         logger.info("Application Info Response: " + applicationInfoResponse);
         return Response.ok(applicationInfoResponse).build();
     }

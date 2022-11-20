@@ -33,7 +33,7 @@ class PredictionServiceTest {
         createUserRequest.setScore(0);
         createUserRequest.setClientUuid(UUID.randomUUID());
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, true);
         this.predictionService.clearPredictions();
 
         PredictionDto predictionDto = new PredictionDto();
@@ -58,7 +58,7 @@ class PredictionServiceTest {
         createUserRequest.setScore(0);
         createUserRequest.setClientUuid(UUID.randomUUID());
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
 
         this.predictionService.clearPredictions();
         PredictionDto predictionDto = new PredictionDto();
@@ -86,7 +86,7 @@ class PredictionServiceTest {
         createUserRequest.setScore(0);
         createUserRequest.setClientUuid(UUID.randomUUID());
 
-        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest);
+        AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
         int numberOfPredictions = 30;
         UUID clientUuid = savedUser.getClientUuid();

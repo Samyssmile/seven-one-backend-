@@ -27,7 +27,7 @@ class UserServiceTest {
 
     @Test
     void shouldRemoveUserByUuid() {
-        AuthenticatedUserDto testAuthenticatedUserDto = userService.saveNewUser(getPredefinedCreateUserRequest());
+        AuthenticatedUserDto testAuthenticatedUserDto = userService.saveNewUser(getPredefinedCreateUserRequest(), false);
 
         List<UserEntity> allUsers = userService.findAllUsers();
         Optional<UserEntity> subject = allUsers.stream().filter(userEntity -> userEntity.getClientUuid().equals(testAuthenticatedUserDto.getClientUuid())).findFirst();
@@ -50,7 +50,7 @@ class UserServiceTest {
 
     @Test
     void shouldSaveNewUser() {
-        AuthenticatedUserDto testAuthenticatedUserDto = userService.saveNewUser(getPredefinedCreateUserRequest());
+        AuthenticatedUserDto testAuthenticatedUserDto = userService.saveNewUser(getPredefinedCreateUserRequest(), false);
         userService.findAllUsers().stream().filter(userEntity -> userEntity.getClientUuid().equals(testAuthenticatedUserDto.getClientUuid())).findFirst().ifPresent(userEntity -> {
             assertTrue(userEntity.getNickname().contains("#"));
         });
