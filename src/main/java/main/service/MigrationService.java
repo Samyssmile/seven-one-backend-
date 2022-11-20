@@ -29,10 +29,14 @@ public class MigrationService {
 
 
     void onStart(@Observes StartupEvent ev) {
-        LOGGER.info("Start migration");
-        this.dataMigration.migrate();
-        LOGGER.info("Migration finished");
-
+        String activeProfile = ProfileManager.getActiveProfile();
+        if (activeProfile.equals("dev") || activeProfile.equals("test")) {
+            LOGGER.info("Start migration");
+            dataMigration.migrate();
+            LOGGER.info("Migration finished");
+        } else {
+            LOGGER.info("Migration skipped");
+        }
     }
 
     void onStop(@Observes ShutdownEvent ev) {
