@@ -8,9 +8,11 @@ import main.entity.PredictionEntity;
 import main.request.CreateUserRequest;
 import main.request.MatchUpdateRequest;
 import org.jboss.logging.Logger;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,8 +43,8 @@ class MatchServiceTest {
         LOGGER.info(allMatches);
     }
 
-    @Test
-    void shouldUserScoresMaxScore() {
+    @RepeatedTest(5)
+    void shouldUserScoresMaxScore() throws PredictionTimeExpiredException {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setNickname("testUser1");
         createUserRequest.setScore(0);
@@ -51,6 +53,10 @@ class MatchServiceTest {
 
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        match.setMatchDate(calendar.getTime());
+        matchService.updateMatch(match);
 
         AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
@@ -71,8 +77,8 @@ class MatchServiceTest {
         LOGGER.info(allMatches);
     }
 
-    @Test
-    void shouldUserScoresPartialScore() {
+    @RepeatedTest(5)
+    void shouldUserScoresPartialScore() throws PredictionTimeExpiredException {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setNickname("testUser2");
         createUserRequest.setScore(0);
@@ -81,6 +87,10 @@ class MatchServiceTest {
 
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        match.setMatchDate(calendar.getTime());
+        matchService.updateMatch(match);
 
         AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
@@ -101,8 +111,8 @@ class MatchServiceTest {
         LOGGER.info(allMatches);
     }
 
-    @Test
-    void shouldUserScoresMinimalScore() {
+    @RepeatedTest(5)
+    void shouldUserScoresMinimalScore() throws PredictionTimeExpiredException {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setNickname("testUser3");
         createUserRequest.setScore(0);
@@ -111,6 +121,10 @@ class MatchServiceTest {
 
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        match.setMatchDate(calendar.getTime());
+        matchService.updateMatch(match);
 
         AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();
@@ -131,16 +145,19 @@ class MatchServiceTest {
         LOGGER.info(allMatches);
     }
 
-    @Test
-    void shouldUserScoresNothing() {
+    @RepeatedTest(5)
+    void shouldUserScoresNothing() throws PredictionTimeExpiredException {
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setNickname("testUser4");
         createUserRequest.setScore(0);
         createUserRequest.setClientUuid(UUID.randomUUID());
 
-
         List<MatchDto> allMatches = matchService.getAllMatches();
         MatchDto match = allMatches.get(1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        match.setMatchDate(calendar.getTime());
+        matchService.updateMatch(match);
 
         AuthenticatedUserDto savedUser = userService.saveNewUser(createUserRequest, false);
         this.predictionService.clearPredictions();

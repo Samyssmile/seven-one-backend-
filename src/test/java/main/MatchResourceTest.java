@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
+import java.util.Calendar;
 import java.util.List;
 import java.util.UUID;
 
@@ -52,12 +53,20 @@ class MatchResourceTest {
     }
 
     @Test
-    void shouldLeadTheRankLadder() {
+    void shouldLeadTheRankLadder() throws PredictionTimeExpiredException {
         // Given two games
         List<MatchDto> allGames = matchService.getAllMatches();
         MatchDto firstGame = matchService.getAllMatches().get(5);
-        MatchDto secondGame = matchService.getAllMatches().get(6);
+        //Set MatchDate to tomorrow
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DATE, 1);
+        firstGame.setMatchDate(calendar.getTime());
+        matchService.updateMatch(firstGame);
 
+        MatchDto secondGame = matchService.getAllMatches().get(6);
+        //Set MatchDate to tomorrow
+        secondGame.setMatchDate(calendar.getTime());
+        matchService.updateMatch(secondGame);
         // Create a new User JonSnow
         CreateUserRequest createUserRequest = new CreateUserRequest();
         createUserRequest.setClientUuid(firstUserUUID);

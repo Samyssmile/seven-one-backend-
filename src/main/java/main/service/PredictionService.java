@@ -3,6 +3,7 @@ package main.service;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.security.UnauthorizedException;
+import main.dto.MatchDto;
 import main.dto.PredictionDto;
 import main.entity.PredictionEntity;
 import main.entity.UserEntity;
@@ -12,9 +13,7 @@ import org.modelmapper.convention.MatchingStrategies;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -26,33 +25,38 @@ public class PredictionService {
 
     private ModelMapper modelMapper = new ModelMapper();
 
-    public PredictionService() {
+    private MatchService matchService;
+
+    public PredictionService(MatchService matchService) {
+        this.matchService = matchService;
         modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
     }
 
+
     @Transactional
-    public Optional<PredictionEntity> makePrediction(PredictionDto predictionDto) {
-        boolean valid = validatePrediction(predictionDto.getPrediction());
+    public Optional<PredictionEntity> makePrediction(PredictionDto predictionDto) throws PredictionTimeExpiredException {
+        boolean isValidFormat = validatePrediction(predictionDto.getPrediction());
+        boolean isInTime = isInTimeCheck(predictionDto);
         List<PanacheEntityBase> all = UserEntity.findAll().list();
         boolean checkUserExists = UserEntity.find("clientUuid", predictionDto.getClientUuid()).firstResultOptional().isPresent();
 
-        if (!checkUserExists){
+        if (!checkUserExists) {
             throw new UnauthorizedException();
         }
-        if (valid ){
+        if (isValidFormat) {
             PredictionEntity entity = modelMapper.map(predictionDto, PredictionEntity.class);
             List<PredictionEntity> clientPredictions = PredictionEntity.find("clientUuid", predictionDto.getClientUuid()).list();
-            List<PredictionEntity> persistedIdenticalEntities = clientPredictions.stream().filter(p->p.getMatchUuid().equals(predictionDto.getMatchUuid())).toList();
+            List<PredictionEntity> persistedIdenticalEntities = clientPredictions.stream().filter(p -> p.getMatchUuid().equals(predictionDto.getMatchUuid())).toList();
             if (persistedIdenticalEntities.size() == 0) {
                 entity.persistAndFlush();
-            }else{
+            } else {
                 persistedIdenticalEntities.get(0).setPrediction(predictionDto.getPrediction());
                 persistedIdenticalEntities.get(0).persistAndFlush();
             }
 
             // Patter match number - number
             Matcher matcher = pattern.matcher(entity.getPrediction());
-            if(matcher.matches()) {
+            if (matcher.matches()) {
                 logger.info("Prediction made: " + entity.getPrediction() + "; Game " + entity.getMatchUuid() + "; Firstteam " + entity.getPrediction().split(":")[0] + "; Secondteam" + entity.getPrediction().split(":")[1]);
                 return Optional.ofNullable(entity);
             } else {
@@ -61,6 +65,29 @@ public class PredictionService {
             }
         }
         return Optional.empty();
+    }
+
+    private boolean isInTimeCheck(PredictionDto predictionDto) throws PredictionTimeExpiredException {
+        // Get Match time
+        UUID matchUUID = predictionDto.getMatchUuid();
+        Optional<MatchDto> game = matchService.getGameByUuid(matchUUID);
+        if (game.isPresent()) {
+            MatchDto matchDto = game.get();
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(matchDto.getMatchDate());
+            calendar.add(Calendar.HOUR, 1);
+            Date matchDate = calendar.getTime();
+
+            Date now = new Date();
+            if (now.after(matchDate)) {
+                logger.info("Prediction time expired");
+                throw new PredictionTimeExpiredException("Prediction time expired");
+            }
+            return true;
+
+        }
+        logger.info("User predict a game that does not exist");
+        return false;
     }
 
     private boolean validatePrediction(String prediction) {
@@ -75,7 +102,7 @@ public class PredictionService {
                 return false;
             }
 
-            if (firstTeam>10 || secondTeam>10) {
+            if (firstTeam > 10 || secondTeam > 10) {
                 return false;
             }
         } catch (NumberFormatException e) {
@@ -128,5 +155,9 @@ public class PredictionService {
     @Transactional
     public void clearPredictions() {
         PredictionEntity.deleteAll();
+    }
+
+    public void setMatchService(MatchService matchServiceMock) {
+        this.matchService = matchServiceMock;
     }
 }

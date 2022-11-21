@@ -4,7 +4,7 @@ import io.quarkus.security.UnauthorizedException;
 import main.dto.PredictionDto;
 import main.entity.PredictionEntity;
 import main.service.PredictionService;
-import main.utility.Utility;
+import main.service.PredictionTimeExpiredException;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.jboss.logging.Logger;
 
@@ -13,7 +13,6 @@ import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Response;
 import java.util.Optional;
-import java.util.Random;
 import java.util.UUID;
 
 @Path("/predictions")
@@ -21,7 +20,6 @@ public class PredictionResource {
 
     private static final Logger logger = Logger.getLogger(PredictionResource.class);
 
-    private final Random random = new Random();
     private final PredictionService predictionService;
 
     @Inject
@@ -44,16 +42,16 @@ public class PredictionResource {
     @Produces("application/json")
     @Operation(summary = "Make new prediction to an upcaming match.")
     @RolesAllowed({"app-user", "app-admin"})
-    public Response makePrediction(PredictionDto predictionDto) {
+    public Response makePrediction(PredictionDto predictionDto) throws PredictionTimeExpiredException {
         try {
             Optional<PredictionEntity> optionalEntity = this.predictionService.makePrediction(predictionDto);
             if (optionalEntity.isPresent()) {
                 return Response.ok(optionalEntity.get()).build();
             } else {
-                logger.warn("Bad request for prediction: "+predictionDto.getPrediction()+"; Game "+predictionDto.getMatchUuid());
+                logger.warn("Bad request for prediction: " + predictionDto.getPrediction() + "; Game " + predictionDto.getMatchUuid());
                 return Response.status(Response.Status.BAD_REQUEST).build();
             }
-        }catch (UnauthorizedException unauthorizedException){
+        } catch (UnauthorizedException unauthorizedException) {
             return Response.status(Response.Status.UNAUTHORIZED).build();
         }
 
@@ -80,8 +78,4 @@ public class PredictionResource {
         return Response.ok(predictionService.findAllPredictions()).build();
     }
 
-    private PredictionDto generateRandomPredictionDto() {
-        return new PredictionDto(UUID.randomUUID(), Utility.getRandomMatchUUID(),random.nextInt(10)+"-"+random.nextInt(10) );
-    }
-
-    }
+}

@@ -153,4 +153,11 @@ public class MatchService {
         }
         UserEntity.persist(clientEntityList);
     }
+
+    @Transactional
+    public void updateMatch(MatchDto firstGame) {
+        MatchEntity matchEntity = MatchEntity.find("uuid", firstGame.getUuid()).firstResult();
+        modelMapper.map(firstGame, matchEntity);
+        matchEntity.persistAndFlush();
+    }
 }
