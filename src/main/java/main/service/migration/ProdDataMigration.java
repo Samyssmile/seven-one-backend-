@@ -167,10 +167,17 @@ public class ProdDataMigration extends DataPersistance implements IDataMigration
     @Override
     public void migrateMatchSchedule() {
         // 20.11.2022
+//        MatchEntity qatarVsEcuador = new MatchEntity();
+//        qatarVsEcuador.setFirstTeam(getTeamByName("Qatar"));
+//        qatarVsEcuador.setSecondTeam(getTeamByName("Ecuador"));
+//        qatarVsEcuador.setMatchDate(new GregorianCalendar(2022, Calendar.NOVEMBER, 20, 17, 0).getTime());
+//        qatarVsEcuador.setGroupName("A");
+//        matchEntityList.add(qatarVsEcuador);
+
         MatchEntity qatarVsEcuador = new MatchEntity();
         qatarVsEcuador.setFirstTeam(getTeamByName("Qatar"));
         qatarVsEcuador.setSecondTeam(getTeamByName("Ecuador"));
-        qatarVsEcuador.setMatchDate(new GregorianCalendar(2022, Calendar.NOVEMBER, 20, 17, 0).getTime());
+        qatarVsEcuador.setMatchDate(new GregorianCalendar(2022, Calendar.NOVEMBER, 21, 11, 10).getTime());
         qatarVsEcuador.setGroupName("A");
         matchEntityList.add(qatarVsEcuador);
 

@@ -30,7 +30,7 @@ public class MigrationService {
 
     void onStart(@Observes StartupEvent ev) {
         String activeProfile = ProfileManager.getActiveProfile();
-        if (activeProfile.equals("dev") || activeProfile.equals("test")) {
+        if (activeProfile.equals("dev") || activeProfile.equals("test") || activeProfile.equals("prod")) {
             LOGGER.info("Start migration");
             dataMigration.migrate();
             LOGGER.info("Migration finished");
